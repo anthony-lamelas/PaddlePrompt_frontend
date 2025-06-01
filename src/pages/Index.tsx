@@ -1,9 +1,9 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Waves } from 'lucide-react';
 import ChatMessage from '../components/ChatMessage';
 import ChatInput from '../components/ChatInput';
 import TypingIndicator from '../components/TypingIndicator';
+import { apiCall } from '../config/api';
 
 interface Message {
   id: string;
@@ -46,20 +46,11 @@ const Index = () => {
     setIsTyping(true);
 
     try {
-      // Replace with your actual backend endpoint
-      const response = await fetch('/api/chat', {
+      // Call the backend using our API configuration
+      const data = await apiCall('/query', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify({ question: text }),
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to get response');
-      }
-
-      const data = await response.json();
       
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
