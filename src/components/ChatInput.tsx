@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Send } from 'lucide-react';
+import { Send, Mic } from 'lucide-react';
 
 interface ChatInputProps {
   onSendMessage: (message: string) => void;
@@ -35,28 +35,38 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, disabled = false }
 
   return (
     <form onSubmit={handleSubmit} className="relative">
-      <div className="flex items-end space-x-3 bg-white rounded-2xl border border-gray-200 shadow-sm p-3 focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent transition-all">
+      <div className="flex items-end space-x-4 bg-white/90 backdrop-blur-md rounded-3xl border border-blue-200/50 shadow-xl p-4 focus-within:ring-2 focus-within:ring-cyan-400/50 focus-within:border-cyan-300 transition-all hover:shadow-2xl">
         <textarea
           ref={textareaRef}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Ask me about concrete canoe proposals..."
+          placeholder="Ask me about concrete canoe proposals, design tips, or regulations..."
           disabled={disabled}
-          className="flex-1 resize-none border-none outline-none bg-transparent text-gray-800 placeholder-gray-500 max-h-32 min-h-[20px] leading-5"
+          className="flex-1 resize-none border-none outline-none bg-transparent text-slate-800 placeholder-slate-500 max-h-32 min-h-[24px] leading-6 font-medium"
           rows={1}
         />
-        <button
-          type="submit"
-          disabled={!message.trim() || disabled}
-          className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
-            message.trim() && !disabled
-              ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white hover:from-blue-600 hover:to-indigo-600 shadow-sm hover:shadow-md transform hover:scale-105'
-              : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-          }`}
-        >
-          <Send size={18} />
-        </button>
+        
+        <div className="flex items-center space-x-2">
+          <button
+            type="button"
+            className="flex-shrink-0 w-10 h-10 rounded-2xl flex items-center justify-center transition-all bg-slate-100 text-slate-400 hover:bg-slate-200 hover:text-slate-600"
+          >
+            <Mic size={18} />
+          </button>
+          
+          <button
+            type="submit"
+            disabled={!message.trim() || disabled}
+            className={`flex-shrink-0 w-12 h-12 rounded-2xl flex items-center justify-center transition-all transform ${
+              message.trim() && !disabled
+                ? 'bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 text-white hover:from-cyan-600 hover:via-blue-600 hover:to-indigo-600 shadow-lg hover:shadow-xl hover:scale-105 shadow-blue-200'
+                : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+            }`}
+          >
+            <Send size={20} />
+          </button>
+        </div>
       </div>
     </form>
   );
