@@ -92,28 +92,28 @@ const Index = () => {
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-blue-100/30 to-cyan-100/30 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '4s' }}></div>
       </div>
 
-      <div className="container mx-auto max-w-6xl h-screen flex flex-col relative z-10 p-4">
+      <div className="container mx-auto max-w-5xl h-screen flex flex-col relative z-10 p-4">
         {/* Header */}
-        <div className="bg-gradient-to-r from-cyan-500/15 via-blue-500/15 to-indigo-500/15 backdrop-blur-md border-b border-blue-200/50 p-10 shadow-lg rounded-t-3xl">
+        <div className="bg-gradient-to-r from-cyan-500/15 via-blue-500/15 to-indigo-500/15 backdrop-blur-md border-b border-blue-200/50 p-6 shadow-lg rounded-t-3xl">
           <div className="text-center">
-            <div className="flex items-center justify-center space-x-5 mb-4">
-              <div className="p-5 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-3xl shadow-2xl">
-                <Waves className="w-12 h-12 text-white" />
+            <div className="flex items-center justify-center space-x-4 mb-3">
+              <div className="p-3 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-2xl shadow-xl">
+                <Waves className="w-8 h-8 text-white" />
               </div>
-              <h1 className="text-6xl font-bold bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 bg-clip-text text-transparent">
                 PaddlePrompt
               </h1>
             </div>
-            <p className="text-slate-600 text-2xl font-medium mb-4">Your AI-Powered Concrete Canoe Companion</p>
-            <div className="flex items-center justify-center space-x-3">
-              <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-              <span className="text-lg text-slate-500">Ready to help with your canoe proposals</span>
+            <p className="text-slate-600 text-lg font-medium mb-3">Your AI-Powered Concrete Canoe Companion</p>
+            <div className="flex items-center justify-center space-x-2">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              <span className="text-sm text-slate-500">Ready to help with your canoe proposals</span>
             </div>
           </div>
         </div>
 
         {/* Chat Messages */}
-        <div className="flex-1 overflow-y-auto p-10 space-y-8 scrollbar-thin scrollbar-thumb-blue-200 scrollbar-track-transparent">
+        <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin scrollbar-thumb-blue-200 scrollbar-track-transparent">
           {messages.map((message) => (
             <ChatMessage key={message.id} message={message} />
           ))}
@@ -122,7 +122,7 @@ const Index = () => {
         </div>
 
         {/* Chat Input */}
-        <div className="p-10 bg-gradient-to-r from-white/80 via-blue-50/80 to-cyan-50/80 backdrop-blur-md border-t border-blue-200/50 rounded-b-3xl">
+        <div className="p-6 bg-gradient-to-r from-white/80 via-blue-50/80 to-cyan-50/80 backdrop-blur-md border-t border-blue-200/50 rounded-b-3xl">
           <ChatInput onSendMessage={handleSendMessage} disabled={isTyping} />
         </div>
       </div>
