@@ -1,11 +1,10 @@
 // API Configuration for different environments
 const API_CONFIG = {
   development: {
-    baseURL: 'http://localhost:5000'
+    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000'
   },
   production: {
-    // You'll replace this with your actual domain when you deploy
-    baseURL: 'https://your-domain.com'
+    baseURL: import.meta.env.VITE_API_URL || 'https://paddleprompt-backend.onrender.com'
   }
 } as const;
 
