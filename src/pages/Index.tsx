@@ -1,6 +1,5 @@
-
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Waves } from 'lucide-react';
+import { Send, Waves, Plus } from 'lucide-react';
 import ChatMessage from '../components/ChatMessage';
 import ChatInput from '../components/ChatInput';
 import TypingIndicator from '../components/TypingIndicator';
@@ -13,16 +12,17 @@ interface Message {
   timestamp: Date;
 }
 
+const INITIAL_MESSAGE: Message = {
+  id: '1',
+  text: "Hello! I'm PaddlePrompt, your concrete canoe proposal assistant. I'm here to help you navigate the waters of canoe design and proposals. What would you like to explore today? 🚣‍♀️",
+  isUser: false,
+  timestamp: new Date()
+};
+
 const Index = () => {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      text: "Hello! I'm PaddlePrompt, your concrete canoe proposal assistant. I'm here to help you navigate the waters of canoe design and proposals. What would you like to explore today? 🚣‍♀️",
-      isUser: false,
-      timestamp: new Date()
-    }
-  ]);
+  const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
   const [isTyping, setIsTyping] = useState(false);
+  const [sessionId, setSessionId] = useState(() => `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -32,6 +32,47 @@ const Index = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages, isTyping]);
+
+  // Convert messages to conversation history format for API
+  const getConversationHistory = () => {
+    return messages
+      .filter(msg => msg.id !== '1') // Exclude the initial greeting message
+      .map(msg => ({
+        role: msg.isUser ? 'user' : 'assistant',
+        content: msg.text
+      }));
+  };
+
+  // Function to start a new chat
+  const startNewChat = async () => {
+    const oldSessionId = sessionId;
+    
+    // Generate new session ID
+    const newSessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    setSessionId(newSessionId);
+    
+    // Reset messages to initial state
+    setMessages([{
+      ...INITIAL_MESSAGE,
+      timestamp: new Date() // Update timestamp for new chat
+    }]);
+    
+    // Clear typing state
+    setIsTyping(false);
+    
+    // Optional: Clear the old session on the server (helps with memory management)
+    try {
+      await apiCall('/clear-session', {
+        method: 'POST',
+        body: JSON.stringify({ session_id: oldSessionId }),
+      });
+      console.log(`Cleared old session: ${oldSessionId}`);
+    } catch (error) {
+      console.log('Note: Could not clear old session on server (not critical):', error);
+    }
+    
+    console.log(`Started new chat with session ID: ${newSessionId}`);
+  };
 
   const handleSendMessage = async (text: string) => {
     if (!text.trim()) return;
@@ -47,10 +88,20 @@ const Index = () => {
     setIsTyping(true);
 
     try {
-      // Call the backend using our API configuration
+      // Get conversation history (including the new user message)
+      const conversationHistory = [
+        ...getConversationHistory(),
+        { role: 'user', content: text }
+      ];
+
+      // Call the backend with conversation history
       const data = await apiCall('/query', {
         method: 'POST',
-        body: JSON.stringify({ question: text }),
+        body: JSON.stringify({ 
+          question: text,
+          session_id: sessionId,
+          conversation_history: conversationHistory
+        }),
       });
       
       const botMessage: Message = {
@@ -88,13 +139,29 @@ const Index = () => {
         {/* Header */}
         <div className="bg-gradient-to-r from-cyan-500/15 via-blue-500/15 to-indigo-500/15 backdrop-blur-md border-b border-blue-200/50 p-4 shadow-lg rounded-t-2xl">
           <div className="text-center">
-            <div className="flex items-center justify-center space-x-3 mb-2">
-              <div className="p-2 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-xl shadow-lg">
-                <Waves className="w-6 h-6 text-white" />
+            <div className="flex items-center justify-between mb-2">
+              {/* Left spacer for symmetry */}
+              <div className="w-10"></div>
+              
+              {/* Center content */}
+              <div className="flex items-center justify-center space-x-3">
+                <div className="p-2 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-xl shadow-lg">
+                  <Waves className="w-6 h-6 text-white" />
+                </div>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                  PaddlePrompt
+                </h1>
               </div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                PaddlePrompt
-              </h1>
+              
+              {/* New Chat Button */}
+              <button
+                onClick={startNewChat}
+                className="flex items-center space-x-2 px-3 py-2 bg-gradient-to-r from-emerald-400 to-teal-500 text-white rounded-lg hover:from-emerald-500 hover:to-teal-600 transition-all duration-200 shadow-md hover:shadow-lg text-sm font-medium"
+                title="Start New Chat"
+              >
+                <Plus className="w-4 h-4" />
+                <span className="hidden sm:inline">New Chat</span>
+              </button>
             </div>
             <p className="text-slate-600 text-base font-medium mb-2">Your AI-Powered Concrete Canoe Companion</p>
             <div className="flex items-center justify-center space-x-2">
