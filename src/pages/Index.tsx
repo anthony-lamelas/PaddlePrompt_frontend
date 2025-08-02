@@ -14,7 +14,7 @@ interface Message {
 
 const INITIAL_MESSAGE: Message = {
   id: '1',
-  text: "Hello! I'm PaddlePrompt, your concrete canoe proposal assistant. I'm here to help you navigate the waters of canoe design and proposals. What would you like to explore today? 🚣‍♀️",
+  text: "Hello! I'm PaddlePrompt, your concrete canoe proposal assistant. I'm here to help you navigate the waters of canoe design and proposals. What would you like to explore today?",
   isUser: false,
   timestamp: new Date()
 };
