@@ -22,9 +22,22 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, disabled = false }
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      handleSubmit(e);
+      if (!disabled) {
+        handleSubmit(e);
+      }
     }
   };
+
+  // Auto-focus on mount and after message is cleared
+  useEffect(() => {
+    textareaRef.current?.focus();
+  }, []);
+
+  useEffect(() => {
+    if (message === '' && textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  }, [message]);
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -42,7 +55,6 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, disabled = false }
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Ask me about concrete canoe proposals, design tips, or regulations..."
-          disabled={disabled}
           className="flex-1 resize-none border-none outline-none bg-transparent text-slate-800 placeholder-slate-500 max-h-24 min-h-[24px] leading-6 font-medium text-sm"
           rows={1}
         />

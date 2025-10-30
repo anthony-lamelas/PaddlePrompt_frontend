@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { User, Bot, Sparkles } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 
 interface Message {
   id: string;
@@ -39,7 +40,13 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
             ? 'bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-600 text-white rounded-br-md shadow-blue-200'
             : 'bg-gradient-to-br from-white/90 to-blue-50/90 text-slate-800 rounded-bl-md border border-blue-100/50 shadow-cyan-100'
         }`}>
-          <p className="text-sm leading-relaxed whitespace-pre-wrap font-medium">{message.text}</p>
+          {message.isUser ? (
+            <p className="text-sm leading-relaxed whitespace-pre-wrap font-medium">{message.text}</p>
+          ) : (
+            <div className="text-sm leading-relaxed font-medium prose prose-sm max-w-none prose-headings:text-slate-800 prose-headings:font-bold prose-p:text-slate-700 prose-strong:text-slate-900 prose-ul:text-slate-700 prose-ol:text-slate-700">
+              <ReactMarkdown>{message.text}</ReactMarkdown>
+            </div>
+          )}
         </div>
         <p className={`text-xs text-slate-500 mt-1 font-medium ${message.isUser ? 'text-right' : 'text-left'}`}>
           {formatTime(message.timestamp)}
